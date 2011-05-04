@@ -13,9 +13,8 @@ from taggit.managers import TaggableManager
 
 class MediaUpload(models.Model):
     
-    title = models.CharField(max_length=150, blank=True)
-    description = models.TextField(blank=True)
-    media = models.FileField(upload_to="mimesis")
+    caption = models.CharField(max_length=500)
+    media = models.FileField(upload_to="mimesis", max_length=500)
     creator = models.ForeignKey(User)
     created = models.DateTimeField(default=datetime.datetime.now)
     media_type = models.CharField(editable=False, max_length=100)
@@ -24,7 +23,7 @@ class MediaUpload(models.Model):
     tags = TaggableManager()
     
     def __unicode__(self):
-        return self.title
+        return self.caption
     
     @property
     def mime_type(self):
@@ -49,10 +48,18 @@ class MediaAssociation(models.Model):
     """
     
     media = models.ForeignKey(MediaUpload)
-    description = models.TextField()
     
     content_type = models.ForeignKey(ContentType)
     object_pk = models.PositiveIntegerField()
     content_object = generic.GenericForeignKey("content_type", "object_pk")
     
+    is_primary = models.BooleanField(default=False)
+    
     objects = MediaAssociationManager()
+    
+    class Meta:
+        unique_together = ('media', 'content_type', 'object_pk')
+        ordering = ['-is_primary']
+
+    def __unicode__(self):
+        return "Attached to " + str(self.content_object) + ": " + str(self.media)
