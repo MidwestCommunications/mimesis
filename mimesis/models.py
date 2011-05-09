@@ -30,15 +30,16 @@ class MediaUpload(models.Model):
         return "%s/%s" % (self.media_type, self.media_subtype)
     
     def save(self, *args, **kwargs):
-        (mime_type, encoding) = mimetypes.guess_type(self.media.path)
-        try:
-            mime = mime_type.split("/")
-            self.media_type = mime[0]
-            self.media_subtype = mime[1]
-        except:
-            # Mime type unknown, use text/plain
-            self.media_type = "text"
-            self.media_subtype = "plain"
+        if not self.media_type:
+            (mime_type, encoding) = mimetypes.guess_type(self.media.path)
+            try:
+                mime = mime_type.split("/")
+                self.media_type = mime[0]
+                self.media_subtype = mime[1]
+            except:
+                # Mime type unknown, use text/plain
+                self.media_type = "text"
+                self.media_subtype = "plain"
         super(MediaUpload, self).save()
 
 
