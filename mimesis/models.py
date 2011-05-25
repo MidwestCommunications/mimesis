@@ -26,6 +26,18 @@ class MediaUpload(models.Model):
         return self.caption
     
     @property
+    def thumbnail_img_url(self):
+        if self.media_type == 'image':
+            return self.media.url
+        if self.media_type == 'audio':
+            return "http://placekitten.com/48/48/"
+        if self.media_type == 'video' and self.media_subtype == 'youtube':
+            return "http://img.youtube.com/vi/" + self.media.name + "/1.jpg"
+        if self.media_type == 'application' and self.media_subtype == 'pdf':
+            return "http://placekitten.com/48/48/"
+        return ''
+    
+    @property
     def mime_type(self):
         return "%s/%s" % (self.media_type, self.media_subtype)
     
