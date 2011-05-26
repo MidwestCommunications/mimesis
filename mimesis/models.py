@@ -1,5 +1,6 @@
 import datetime
 import mimetypes
+import os
 
 from django.db import models
 
@@ -11,10 +12,13 @@ from mimesis.managers import MediaAssociationManager
 from taggit.managers import TaggableManager
 
 
+def _get_upload_path(instance, filename):
+    return instance.created.strftime('mimesis/%Y-%m/%d/') + os.path.basename(filename)
+    
 class MediaUpload(models.Model):
     
     caption = models.CharField(max_length=500)
-    media = models.FileField(upload_to="mimesis", max_length=500)
+    media = models.FileField(upload_to=_get_upload_path, max_length=500)
     creator = models.ForeignKey(User)
     created = models.DateTimeField(default=datetime.datetime.now)
     media_type = models.CharField(editable=False, max_length=100)
