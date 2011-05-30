@@ -36,7 +36,7 @@ class MediaUpload(models.Model):
         if self.media_type == 'audio':
             return "http://placekitten.com/48/48/"
         if self.media_type == 'video' and self.media_subtype == 'youtube':
-            return "http://img.youtube.com/vi/" + self.media.name + "/1.jpg"
+            return "http://img.youtube.com/vi/" + self.media.name + "/0.jpg"
         if self.media_type == 'application' and self.media_subtype == 'pdf':
             return "http://placekitten.com/48/48/"
         return ''
