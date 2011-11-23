@@ -1,10 +1,32 @@
+import os.path
+
 from django.conf import settings
 from django.db import models, connection, reset_queries
 from django.test import TestCase
+from django.core.files import File
 from django.contrib.auth.models import User
 
 from mimesis.managers import WithMediaManager
 from mimesis.models import MediaUpload, MediaAssociation
+
+
+class ModelTestCase(TestCase):
+    
+    def setUp(self):
+        self.user = User.objects.create_user('user', 'mail@mail.com')
+    
+    def test_add_media_from_filesystem(self):
+        test_file = open(os.path.join(
+            os.path.abspath(os.path.dirname(__file__)),
+            'test_media',
+            'test.jpg'
+        ), 'rb')
+        media_upload = MediaUpload.objects.create(
+            media=File(test_file),
+            creator=self.user
+        )
+        self.assertEqual(media_upload.media_type, 'image')
+        self.assertEqual(media_upload.media_subtype, 'jpeg')
 
 
 class TestModel(models.Model):
