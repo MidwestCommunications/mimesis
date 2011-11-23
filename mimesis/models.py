@@ -46,6 +46,7 @@ class MediaUpload(models.Model):
         return "%s/%s" % (self.media_type, self.media_subtype)
     
     def save(self, *args, **kwargs):
+        super(MediaUpload, self).save()
         if not self.media_type:
             (mime_type, encoding) = mimetypes.guess_type(self.media.path)
             try:
@@ -56,7 +57,7 @@ class MediaUpload(models.Model):
                 # Mime type unknown, use text/plain
                 self.media_type = "text"
                 self.media_subtype = "plain"
-        super(MediaUpload, self).save()
+            super(MediaUpload, self).save()
 
 
 class MediaAssociation(models.Model):
