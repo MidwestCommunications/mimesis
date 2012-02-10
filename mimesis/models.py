@@ -1,8 +1,8 @@
-import datetime
 import mimetypes
 import os
 
 from django.db import models
+from django.utils import timezone
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -20,7 +20,7 @@ class MediaUpload(models.Model):
     caption = models.CharField(max_length=500)
     media = models.FileField(upload_to=_get_upload_path, max_length=500)
     creator = models.ForeignKey(User)
-    created = models.DateTimeField(default=datetime.datetime.now)
+    created = models.DateTimeField(default=timezone.now)
     media_type = models.CharField(editable=False, max_length=100)
     media_subtype = models.CharField(editable=False, max_length=100)
     
