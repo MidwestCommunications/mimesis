@@ -27,7 +27,10 @@ class MediaUpload(models.Model):
     tags = TaggableManager()
     
     def __unicode__(self):
-        return self.caption
+        if self.caption:
+            return self.caption
+        else:
+            return self.media_type + ' created by ' + str(self.creator)
     
     @property
     def thumbnail_img_url(self):
